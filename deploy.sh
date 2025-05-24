@@ -12,6 +12,16 @@ if ! command -v ollama &> /dev/null; then
   curl -fsSL https://ollama.com/install.sh | sh
 fi
 echo "pull phi"
+echo "Waiting for Ollama server to become available..."
+for i in {1..30}; do
+    if curl -s http://127.0.0.1:11434 > /dev/null; then
+        echo "Ollama server is up."
+        break
+    else
+        echo "Waiting..."
+        sleep 1
+    fi
+done
 ollama pull phi
 
 # Update the systemd service to listen on all interfaces
